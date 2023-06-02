@@ -16,9 +16,12 @@ class PostQuerySet(models.QuerySet):
         return popular_posts
 
     def fetch_with_comments_count(self):
-        # данный контекстный менеджер позволяет более удобно и гибко его использовать
-        # наравне с прочими методами QuerySet
-        # в отличие от обычного annotate
+        """Подсчет количества комментариев.
+
+        Данный метод позволяет более удобно и гибко его использовать
+        наравне с прочими методами QuerySet
+        в отличие от обычного annotate
+        """
         posts_ids = [post.id for post in self]
         posts_with_comments = Post.objects.filter(id__in=posts_ids).annotate(comments_count=models.Count('comments'))
         ids_and_comments = posts_with_comments.values_list('id', 'comments_count')
